@@ -34,11 +34,11 @@ prisma.$on("query", (e) => {
 
 const router = Router();
 
-router.get("/:animalId", async (req, res) => {
-  const { animalId } = req.params;
+router.get("/:interessadoId", async (req, res) => {
+  const { interessadoId } = req.params;
   try {
-    const fotos = await prisma.fotoAnimal.findMany({
-      where: { animalId: Number(animalId) },
+    const fotos = await prisma.fotoInteressado.findMany({
+      where: { interessadoId: interessadoId },
     });
     res.status(200).json(fotos);
   } catch (error) {
@@ -47,11 +47,11 @@ router.get("/:animalId", async (req, res) => {
 });
 
 router.post("/", upload.single("codigoFoto"), async (req, res) => {
-  const { descricao, animalId } = req.body;
+  const { descricao, interessadoId } = req.body;
   const codigo = req.file?.buffer.toString("base64");
 
-  if (!descricao || !animalId || !codigo) {
-    res.status(400).json({ erro: "Informe descricao, animalId e codigoFoto!" });
+  if (!descricao || !interessadoId || !codigo) {
+    res.status(400).json({ erro: "Informe descricao, interessadoId e codigoFoto!" });
     return;
   }
 
@@ -59,7 +59,7 @@ router.post("/", upload.single("codigoFoto"), async (req, res) => {
     const fotos = await prisma.fotoAnimal.create({
       data: {
         descricao,
-        animalId: Number(animalId),
+        animalId: Number(interessadoId),
         codigoFoto: codigo as string,
       },
     });

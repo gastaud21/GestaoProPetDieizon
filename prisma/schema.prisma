@@ -40,8 +40,6 @@ model Animal {
   observacoes   String?
   admin         Admin        @relation(fields: [adminId], references: [id])
   adminId       Int          @default(1)
-  // Pedido          Pedido[]
-  // FotoInteressado FotoInteressado[]
 
   @@map("animais")
 }
@@ -73,21 +71,45 @@ model FotoAnimal {
   animal     Animal? @relation(fields: [animalId], references: [id])
   animalId   Int
 
-  @@map("fotos")
+  @@map("fotoanimais")
 }
 
 model FotoFuncionario {
   id            Int          @id @default(autoincrement())
   descricao     String       @db.VarChar(30)
+  codigoFoto    String       @db.LongText
   funcionario   Funcionario? @relation(fields: [funcionarioId], references: [id])
-  funcionarioId String?      @db.VarChar(36)
+  funcionarioId String       @db.VarChar(60)
 
-  @@map("fotofuncionarios")
+  @@map("fotouncionarios")
 }
 
 model Funcionario {
-  id    String            @id @default(uuid()) @db.VarChar(36)
-  fotos FotoFuncionario[]
+  id             String            @id @default(uuid()) @db.VarChar(36)
+  nome           String            @db.VarChar(60)
+  cpf            String?           @unique @db.VarChar(11)
+  telefone       String            @default("99999999999") @db.VarChar(11)
+  estadoCivil    EstadoCivil       @default(Nao_Informado)
+  dataNascimento DateTime?
+  email          String?           @db.VarChar(60)
+  acessaSistema  Boolean           @default(false)
+  foto           FotoFuncionario[]
+  endereco       Endereco[]
+  observacoes    String?           @db.VarChar(400)
+  UserSistema    UserSistema?      @relation(fields: [userSistemaId], references: [id])
+  userSistemaId  Int?
+}
+
+model UserSistema {
+  id          Int           @id @default(autoincrement())
+  nome        String        @db.VarChar(60)
+  email       String        @unique @db.VarChar(60)
+  senha       String        @db.VarChar(60) // senha deve ser varchar(60)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  Funcionario Funcionario[]
+
+  @@map("usersistemas")
 }
 
 model FotoInteressado {
@@ -110,33 +132,53 @@ model FotoInteressado {
 //no local storage, pode ser usado fora do id, geralmente é e pode mudar ou experar no tempo estipulado
 //podendo assim ter um campo id sequencial e usando o token em outro item abaixo.
 model Interessado {
-  id             String            @id @default(uuid()) @db.VarChar(36)
-  nome           String            @db.VarChar(60)
-  cpf            String            @unique @db.VarChar(11)
-  fone           String            @db.VarChar(60)
-  isAtivo        Boolean           @default(true)
-  estadoCivil    String            @db.VarChar(40)
-  dataNascimento DateTime
-  senha          String            @db.VarChar(60) // senha deve ser varchar(60)
-  recoveryCode   String?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  // pedidos        Pedido[]
-  fotos          FotoInteressado[]
+  id              String            @id @default(uuid()) @db.VarChar(36)
+  nome            String            @db.VarChar(60)
+  cpf             String?           @unique @db.VarChar(11)
+  telefone        String            @default("99999999999") @db.VarChar(11)
+  isAtivo         Boolean           @default(true)
+  estadoCivil     EstadoCivil       @default(Nao_Informado)
+  dataNascimento  DateTime?
+  // senha          String            @db.VarChar(60) // senha deve ser varchar(60)
+  // recoveryCode   String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  fotos           FotoInteressado[]
+  endereco        Endereco[]
+  jaAdotouConosco Boolean           @default(false)
+  observacoes     String?           @db.VarChar(400)
 
-  @@map("adotantes")
+  @@map("interessados")
+}
+
+enum EstadoCivil {
+  Nao_Informado
+  Casado
+  Solteiro
+  Divorciado
+  Viuvo
 }
 
 model Endereco {
-  id          Int     @id @default(autoincrement())
-  cep         String? @db.VarChar(60)
-  cidade      String  @db.VarChar(60)
-  bairro      String? @db.VarChar(60)
-  estado      String  @db.VarChar(60)
-  endereco    String  @db.VarChar(60)
-  numero      String  @db.VarChar(60)
-  complemento String  @db.VarChar(60)
-  referencia  String? @db.VarChar(60)
+  id            Int          @id @default(autoincrement())
+  cep           String?      @db.VarChar(60)
+  cidade        String       @db.VarChar(60)
+  bairro        String?      @db.VarChar(60)
+  estado        String       @db.VarChar(60)
+  logradouro    String       @db.VarChar(60)
+  numero        String       @db.VarChar(60)
+  complemento   String?      @db.VarChar(60)
+  referencia    String?      @db.VarChar(60)
+  Interessado   Interessado? @relation(fields: [interessadoId], references: [id])
+  interessadoId String?      @db.VarChar(36)
+  tipoPessoa    TipoPessoa
+  Funcionario   Funcionario? @relation(fields: [funcionarioId], references: [id])
+  funcionarioId String?      @db.VarChar(36)
+}
+
+enum TipoPessoa {
+  Interessado
+  Funcionario
 }
 
 // model Pedido {

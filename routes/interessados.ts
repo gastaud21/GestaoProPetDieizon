@@ -7,12 +7,8 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const animais = await prisma.animal.findMany({
-      include: {
-        especie: true,
-      },
-    });
-    res.status(200).json(animais);
+    const interessados = await prisma.interessado.findMany();
+    res.status(200).json(interessados);
   } catch (error) {
     res.status(400).json(error);
   }
@@ -21,56 +17,37 @@ router.get("/", async (req, res) => {
 router.post("/", verificaToken, async (req, res) => {
   const {
     nome,
+    cpf,
+    telefone,
     isAtivo,
-    peso,
-    porte,
-    nascimentoApx,
-    castracao,
-    castracaoApx,
-    status,
-    especieId,
-    sexo,
+    estadoCivil,
+    dataNascimento,
+    jaAdotouConosco,
     observacoes,
-    foto,
   } = req.body;
 
-  if (
-    !nome ||
-    !isAtivo ||
-    !peso ||
-    !porte ||
-    !nascimentoApx ||
-    !castracao ||
-    !status ||
-    !especieId ||
-    !sexo
-  ) {
+  if (!nome) {
     res.status(400).json({
-      erro: "Informe nome, isAtivo, peso, porte, nascimentoApx, castracao, status, especieId, sexo",
+      erro: "Informe nome",
     });
     return;
   }
 
   try {
-    const animal = await prisma.animal.create({
+    const interessado = await prisma.animal.create({
       data: {
         nome,
-        isAtivo,
-        peso,
-        porte,
-        nascimentoApx,
-        ...(castracaoApx && { castracaoApx }),
-        castracao,
-        status,
-        especieId,
-        sexo,
-        castracaoApx,
+        ...(cpf && { cpf }),
+        ...(telefone && { telefone }),
+        ...(isAtivo && { isAtivo }),
+        ...(estadoCivil && { estadoCivil }),
+        ...(dataNascimento && { dataNascimento }),
+        ...(jaAdotouConosco && { jaAdotouConosco }),
         ...(observacoes && { observacoes }),
-        ...(foto && { foto }),
       },
     });
 
-    res.status(201).json(animal);
+    res.status(201).json(interessado);
   } catch (error) {
     res.status(400).json(error);
   }
