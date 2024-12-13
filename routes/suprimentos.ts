@@ -6,11 +6,7 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const suprimentos = await prisma.suprimento.findMany({
-      include: {
-        categoria: true,
-      },
-    });
+    const suprimentos = await prisma.suprimento.findMany();
     res.status(200).json(suprimentos);
   } catch (error) {
     res.status(400).json(error);
@@ -18,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { item, categoriaId, estoque, descricao } = req.body;
+  const { item, categoriaId, estoque, marca, minqtd, descricao } = req.body;
 
   if (!item || !categoriaId || !estoque || !descricao) {
     res.status(400).json({
@@ -30,9 +26,11 @@ router.post("/", async (req, res) => {
   try {
     const suprimento = await prisma.suprimento.create({
       data: {
-        item,
-        categoriaId,
+        item: item,
+        categoriaId: categoriaId,
         estoque,
+        marca,
+        minqtd,
         descricao,
       },
     });
