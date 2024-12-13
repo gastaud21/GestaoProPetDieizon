@@ -11,6 +11,7 @@ import userSistemaRoutes from "./routes/usersistema";
 import funcionariosRoutes from "./routes/funcionarios";
 import enderecosRoutes from "./routes/enderecos";
 import caixaRoutes from "./routes/caixa";
+import suprimentosRoutes from "./routes/suprimentos";
 
 const app = express();
 const port = 3004;
@@ -30,6 +31,7 @@ app.use("/funcionarios", funcionariosRoutes);
 app.use("/enderecos", enderecosRoutes);
 
 app.use("/caixa", caixaRoutes);
+app.use("/suprimentos", suprimentosRoutes);
 
 app.get("/", (req, res) => {
   res.send("API GestaoProPet");
