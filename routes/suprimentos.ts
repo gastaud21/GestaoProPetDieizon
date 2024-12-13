@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { item, categoriaId, estoque, marca, minqtd, descricao } = req.body;
 
-  if (!item || !categoriaId || !estoque || !descricao) {
+  if (!item || !categoriaId || !estoque) {
     res.status(400).json({
       erro: "Informe item, categoriaId, estoque, e unidade",
     });
@@ -26,12 +26,12 @@ router.post("/", async (req, res) => {
   try {
     const suprimento = await prisma.suprimento.create({
       data: {
-        item: item,
-        categoriaId: categoriaId,
+        item,
         estoque,
-        marca,
-        minqtd,
-        descricao,
+        categoriaId,
+        ...(marca && { marca }),
+        ...(minqtd && { minqtd }),
+        ...(descricao && { descricao }),
       },
     });
     res.status(201).json(suprimento);
@@ -55,7 +55,7 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { item, categoriaId, estoque, descricao } = req.body;
+  const { item, categoriaId, estoque, marca, minqtd, descricao } = req.body;
 
   if (!item || !categoriaId || !estoque) {
     res.status(400).json({
@@ -69,9 +69,11 @@ router.put("/:id", async (req, res) => {
       where: { id: Number(id) },
       data: {
         item,
-        categoriaId,
         estoque,
-        descricao,
+        categoriaId,
+        ...(marca && { marca }),
+        ...(minqtd && { minqtd }),
+        ...(descricao && { descricao }),
       },
     });
     res.status(200).json(suprimento);
