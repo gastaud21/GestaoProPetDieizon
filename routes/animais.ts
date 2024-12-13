@@ -96,17 +96,7 @@ router.put("/:id", async (req, res) => {
     foto,
   } = req.body;
 
-  if (
-    !nome ||
-    !isAtivo ||
-    !peso ||
-    !porte ||
-    !nascimentoApx ||
-    !castracao ||
-    !status ||
-    !especieId ||
-    !sexo
-  ) {
+  if (!id) {
     res.status(400).json({
       erro: "Informe nome, isAtivo, peso, porte, nascimentoApx, castracao, status, especieId, sexo",
     });
@@ -117,17 +107,17 @@ router.put("/:id", async (req, res) => {
     const animal = await prisma.animal.update({
       where: { id: Number(id) },
       data: {
-        nome,
-        isAtivo,
-        peso,
-        porte,
-        nascimentoApx,
+        ...(nome && { nome }),
+        ...(isAtivo && { isAtivo }),
+        ...(peso && { peso }),
+        ...(porte && { porte }),
+        ...(nascimentoApx && { nascimentoApx }),
         ...(castracaoApx && { castracaoApx }),
-        castracao,
-        status,
-        especieId,
-        sexo,
-        castracaoApx,
+        ...(castracao && { castracao }),
+        ...(status && { status }),
+        ...(sexo && { castracao }),
+        ...(castracao && { castracao }),
+        ...(especieId && { especieId }),
         ...(observacoes && { observacoes }),
         ...(foto && { foto }),
       },
