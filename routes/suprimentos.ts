@@ -27,7 +27,7 @@ router.post("/", async (req, res) => {
     const suprimento = await prisma.suprimento.create({
       data: {
         item,
-        estoque,
+        estoque: Number(estoque),
         categoriaId,
         ...(marca && { marca }),
         ...(minqtd && { minqtd }),
@@ -69,7 +69,7 @@ router.put("/:id", async (req, res) => {
       where: { id: Number(id) },
       data: {
         item,
-        estoque,
+        estoque: Number(estoque),
         categoriaId,
         ...(marca && { marca }),
         ...(minqtd && { minqtd }),

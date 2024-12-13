@@ -244,15 +244,15 @@ enum Mes {
 // ---------------------------------------
 // SUPRIMENTO
 model Suprimento {
-  id          Int    @id @default(autoincrement())
-  item        String @db.VarChar(30)
+  id          Int     @id @default(autoincrement())
+  item        String  @db.VarChar(30)
   // categoria   Categoria @relation(fields: [categoriaId], references: [id])
-  categoriaId String @db.VarChar(30)
+  categoriaId String  @db.VarChar(30)
   estoque     Int
   // unidade     Unidades  @default(Un)
-  marca       String @db.VarChar(15)
-  minqtd      Int
-  descricao   String @db.Text
+  marca       String? @db.VarChar(15)
+  minqtd      Int?
+  descricao   String? @db.Text
 }
 
 // model Categoria {
