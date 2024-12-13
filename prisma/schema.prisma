@@ -24,22 +24,22 @@ model Especie {
 model Animal {
   id            Int          @id @default(autoincrement())
   nome          String       @db.VarChar(60)
-  isAtivo       Int          @default(99)
-  peso          Decimal      @db.Decimal(4, 1)
+  isAtivo       Boolean      @default(true)
+  peso          Decimal?     @db.Decimal(4, 1)
   porte         Portes       @default(M)
-  nascimentoApx DateTime
+  nascimentoApx DateTime?
   castracao     Castrado     @default(Verificar)
   castracaoApx  DateTime?
-  status        Status
+  status        Status       @default(Verificar)
   fotos         FotoAnimal[]
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
-  especie       Especie      @relation(fields: [especieId], references: [id])
-  especieId     Int
+  especie       Especie?     @relation(fields: [especieId], references: [id])
+  especieId     Int?
   sexo          Sexos        @default(Nao_Identificado)
   observacoes   String?
-  admin         Admin        @relation(fields: [adminId], references: [id])
-  adminId       Int          @default(1)
+  // admin         Admin        @relation(fields: [adminId], references: [id])
+  // adminId       Int          @default(1)
 
   @@map("animais")
 }
@@ -62,6 +62,7 @@ enum Status {
   Disponive_Para_Adocao
   Adotado
   Lar_Temporario
+  Verificar
 }
 
 model FotoAnimal {
@@ -96,34 +97,29 @@ model Funcionario {
   foto           FotoFuncionario[]
   endereco       Endereco[]
   observacoes    String?           @db.VarChar(400)
-  UserSistema    UserSistema?      @relation(fields: [userSistemaId], references: [id])
-  userSistemaId  Int?
+  // UserSistema    UserSistema?      @relation(fields: [userSistemaId], references: [id])
+  // userSistemaId  Int?
+  senha          String?           @db.VarChar(60) // senha deve ser varchar(60)
 }
 
-model UserSistema {
-  id          Int           @id @default(autoincrement())
-  nome        String        @db.VarChar(60)
-  email       String        @unique @db.VarChar(60)
-  senha       String        @db.VarChar(60) // senha deve ser varchar(60)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  Funcionario Funcionario[]
+// model UserSistema {
+//   id          Int           @id @default(autoincrement())
+//   nome        String        @db.VarChar(60)
+//   email       String        @unique @db.VarChar(60)
+//   senha       String        @db.VarChar(60) // senha deve ser varchar(60)
+//   createdAt   DateTime      @default(now())
+//   updatedAt   DateTime      @updatedAt
+//   Funcionario Funcionario[]
 
-  @@map("usersistemas")
-}
+//   @@map("usersistemas")
+// }
 
 model FotoInteressado {
-  id            Int          @id @default(autoincrement())
-  descricao     String       @db.VarChar(30)
-  codigoFoto    String       @db.Text
-  // animal        Animal?      @relation(fields: [animalId], references: [id])
-  // animalId      Int
-  // adotante      Adotante?    @relation(fields: [adotanteId], references: [id])
-  // adotanteId    Int
-  // funcionario   Funcionario? @relation(fields: [funcionarioId], references: [id])
-  // funcionarioId Int
-  Interessado   Interessado? @relation(fields: [interessadoId], references: [id])
-  interessadoId String?      @db.VarChar(36)
+  id            Int         @id @default(autoincrement())
+  descricao     String      @db.VarChar(30)
+  codigoFoto    String      @db.Text
+  Interessado   Interessado @relation(fields: [interessadoId], references: [id])
+  interessadoId Int
 
   @@map("fotointeressados")
 }
@@ -132,7 +128,7 @@ model FotoInteressado {
 //no local storage, pode ser usado fora do id, geralmente é e pode mudar ou experar no tempo estipulado
 //podendo assim ter um campo id sequencial e usando o token em outro item abaixo.
 model Interessado {
-  id              String            @id @default(uuid()) @db.VarChar(36)
+  id              Int               @id @default(autoincrement())
   nome            String            @db.VarChar(60)
   cpf             String?           @unique @db.VarChar(11)
   telefone        String            @default("99999999999") @db.VarChar(11)
@@ -170,7 +166,7 @@ model Endereco {
   complemento   String?      @db.VarChar(60)
   referencia    String?      @db.VarChar(60)
   Interessado   Interessado? @relation(fields: [interessadoId], references: [id])
-  interessadoId String?      @db.VarChar(36)
+  interessadoId Int?
   tipoPessoa    TipoPessoa
   Funcionario   Funcionario? @relation(fields: [funcionarioId], references: [id])
   funcionarioId String?      @db.VarChar(36)
@@ -195,17 +191,17 @@ enum TipoPessoa {
 //   @@map("pedidos")
 // }
 
-model Admin {
-  id        Int      @id @default(autoincrement())
-  nome      String   @db.VarChar(60)
-  email     String   @unique @db.VarChar(60)
-  senha     String   @db.VarChar(60) // senha deve ser varchar(60)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  animais   Animal[]
+// model Admin {
+//   id        Int      @id @default(autoincrement())
+//   nome      String   @db.VarChar(60)
+//   email     String   @unique @db.VarChar(60)
+//   senha     String   @db.VarChar(60) // senha deve ser varchar(60)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   animais   Animal[]
 
-  @@map("admins")
-}
+//   @@map("admins")
+// }
 
 enum Portes {
   PP
@@ -213,4 +209,34 @@ enum Portes {
   M
   G
   GG
+}
+
+model Caixa {
+  id        Int              @id @default(autoincrement())
+  dia       Int
+  mes       Mes
+  ano       Int
+  tipo      TipoMovimentacao
+  valor     Decimal          @db.Decimal(10, 2)
+  origem    String           @db.VarChar(35)
+  descricao String           @db.VarChar(35)
+}
+
+enum TipoMovimentacao {
+  Entrada
+  Saida
+}
+
+enum Mes {
+  Janeiro
+  Fevereiro
+  Marco
+  Abril
+  Junho
+  Julho
+  Agosto
+  Setembro
+  Outubro
+  Novembro
+  Dezembro
 }

@@ -38,7 +38,7 @@ router.get("/:interessadoId", async (req, res) => {
   const { interessadoId } = req.params;
   try {
     const fotos = await prisma.fotoInteressado.findMany({
-      where: { interessadoId: interessadoId },
+      where: { interessadoId: Number(interessadoId) },
     });
     res.status(200).json(fotos);
   } catch (error) {
@@ -51,7 +51,9 @@ router.post("/", upload.single("codigoFoto"), async (req, res) => {
   const codigo = req.file?.buffer.toString("base64");
 
   if (!descricao || !interessadoId || !codigo) {
-    res.status(400).json({ erro: "Informe descricao, interessadoId e codigoFoto!" });
+    res
+      .status(400)
+      .json({ erro: "Informe descricao, interessadoId e codigoFoto!" });
     return;
   }
 

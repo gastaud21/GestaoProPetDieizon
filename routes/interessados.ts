@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", verificaToken, async (req, res) => {
+router.post("/", async (req, res) => {
   const {
     nome,
     cpf,
@@ -34,7 +34,7 @@ router.post("/", verificaToken, async (req, res) => {
   }
 
   try {
-    const interessado = await prisma.animal.create({
+    const interessado = await prisma.interessado.create({
       data: {
         nome,
         ...(cpf && { cpf }),
@@ -53,7 +53,7 @@ router.post("/", verificaToken, async (req, res) => {
   }
 });
 
-router.delete("/:id", verificaToken, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -66,7 +66,7 @@ router.delete("/:id", verificaToken, async (req, res) => {
   }
 });
 
-router.put("/:id", verificaToken, async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const {
     nome,

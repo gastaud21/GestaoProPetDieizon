@@ -34,6 +34,15 @@ prisma.$on("query", (e) => {
 
 const router = Router();
 
+router.get("/", async (req, res) => {
+  try {
+    const fotos = await prisma.fotoFuncionario.findMany();
+    res.status(200).json(fotos);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
 router.get("/:funcionarioId", async (req, res) => {
   const { funcionarioId } = req.params;
   try {

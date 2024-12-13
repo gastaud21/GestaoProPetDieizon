@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", verificaToken, async (req, res) => {
+router.post("/", async (req, res) => {
   const {
     nome,
     isAtivo,
@@ -34,19 +34,9 @@ router.post("/", verificaToken, async (req, res) => {
     foto,
   } = req.body;
 
-  if (
-    !nome ||
-    !isAtivo ||
-    !peso ||
-    !porte ||
-    !nascimentoApx ||
-    !castracao ||
-    !status ||
-    !especieId ||
-    !sexo
-  ) {
+  if (!nome) {
     res.status(400).json({
-      erro: "Informe nome, isAtivo, peso, porte, nascimentoApx, castracao, status, especieId, sexo",
+      erro: "Informe nome",
     });
     return;
   }
@@ -76,7 +66,7 @@ router.post("/", verificaToken, async (req, res) => {
   }
 });
 
-router.delete("/:id", verificaToken, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -89,7 +79,7 @@ router.delete("/:id", verificaToken, async (req, res) => {
   }
 });
 
-router.put("/:id", verificaToken, async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const {
     nome,

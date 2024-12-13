@@ -2,13 +2,15 @@ import express from "express";
 import cors from "cors";
 import especiesRoutes from "./routes/especies";
 import animaisRoutes from "./routes/animais";
-// import fotoAnimaisRoutes from "./routes/fotoAnimais";
+import fotoAnimaisRoutes from "./routes/fotoAnimais";
 import fotoFuncionariosRoutes from "./routes/fotoFuncionarios";
-// import  fotoInteressadoRoutes  from "./routes/fotoInteressadoRoutes;
+// import fotoInteressadosRoutes from "./routes/fotoInteressados";
 import interessadosRoutes from "./routes/interessados";
-import adminsRoutes from "./routes/funcionarios";
 import dashboardRoutes from "./routes/dashboard";
 import userSistemaRoutes from "./routes/usersistema";
+import funcionariosRoutes from "./routes/funcionarios";
+import enderecosRoutes from "./routes/enderecos";
+import caixaRoutes from "./routes/caixa";
 
 const app = express();
 const port = 3004;
@@ -19,15 +21,18 @@ app.use(cors());
 
 app.use("/especies", especiesRoutes);
 app.use("/animais", animaisRoutes);
-// app.use("/fotoAnimais", fotoAnimaisRoutes);
+app.use("/fotoAnimais", fotoAnimaisRoutes);
 app.use("/fotoFuncionarios", fotoFuncionariosRoutes);
 // app.use("/fotosInteressado", fotoInteressadosRoutes);
-app.use("/", userSistemaRoutes);
 
 app.use("/interessados", interessadosRoutes);
+app.use("/funcionarios", funcionariosRoutes);
+app.use("/enderecos", enderecosRoutes);
+
+app.use("/caixa", caixaRoutes);
 
 app.get("/", (req, res) => {
-  res.send("API: Sistema de Canil");
+  res.send("API GestaoProPet");
 });
 
 app.listen(port, () => {

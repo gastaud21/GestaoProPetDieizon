@@ -34,6 +34,55 @@ prisma.$on("query", (e) => {
 
 const router = Router();
 
+router.get("/:tipoPessoa", async (req, res) => {
+  const { tipoPessoa } = req.params;
+
+  if (tipoPessoa == "Interessado") {
+    try {
+      const endereco = await prisma.endereco.findMany({
+        where: { tipoPessoa: tipoPessoa },
+      });
+      res.status(200).json(endereco);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+    return;
+  }
+
+  if (tipoPessoa == "Funcionario") {
+    try {
+      const endereco = await prisma.endereco.findMany({
+        where: { tipoPessoa: tipoPessoa },
+      });
+      res.status(200).json(endereco);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+    return;
+  }
+  if (tipoPessoa == "Interessado") {
+    try {
+      const endereco = await prisma.endereco.findMany({
+        where: { tipoPessoa: tipoPessoa },
+      });
+      res.status(200).json(endereco);
+    } catch (error) {
+      res.status(400).json(error);
+    }
+    return;
+  }
+});
+
+router.get("/", async (req, res) => {
+  try {
+    const endereco = await prisma.endereco.findMany();
+    res.status(200).json(endereco);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+  return;
+});
+
 router.get("/:pessoaId", async (req, res) => {
   const { pessoaId } = req.params;
   const { tipoPessoa } = req.query;
@@ -41,7 +90,7 @@ router.get("/:pessoaId", async (req, res) => {
   if (tipoPessoa == "Interessado") {
     try {
       const endereco = await prisma.endereco.findMany({
-        where: { interessadoId: pessoaId },
+        where: { interessadoId: Number(pessoaId) },
       });
       res.status(200).json(endereco);
     } catch (error) {
