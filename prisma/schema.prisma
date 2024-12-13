@@ -250,9 +250,9 @@ model Suprimento {
   categoriaId Int
   estoque     Int
   // unidade     Unidades  @default(Un)
-  // marca       String    @db.VarChar(15)
-  // estq_min    Float
-  // descricao   String    @db.Text
+  marca       String    @db.VarChar(15)
+  minqtd      Int
+  descricao   String    @db.Text
 }
 
 model Categoria {
